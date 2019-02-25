@@ -5,6 +5,7 @@ const server = express();
 const bcrypt = require('bcryptjs');
 
 const user = require('./data/helpers/001-user');
+const { authentication } = require('./auth/authentication');
 
 server.use(express.json());
 server.use(helmet());
@@ -49,7 +50,7 @@ server.post('/api/login', (req, res) => {
 });
 
 // get users if authorized
-server.get('/api/users', (req, res) => {
+server.get('/api/users', authentication, (req, res) => {
   user
     .get()
     .then(users => res.status(200).json({ users }))
