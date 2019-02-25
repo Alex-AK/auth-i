@@ -3,12 +3,9 @@ exports.up = function(knex, Promise) {
     table.increments();
     table
       .string('username', 128)
-      .unique()
-      .notNullable();
-    table
-      .string('password', 128)
-      .unique()
-      .notNullable();
+      .notNullable()
+      .unique();
+    table.string('password', 128).notNullable();
     table.timestamps(true, true);
   });
 };
