@@ -1,12 +1,18 @@
+// package imports
 const express = require('express');
-const router = express.Router();
 const bcrypt = require('bcryptjs');
 
+// router extensions
+const router = express.Router();
+
+// data imports
 const users = require('../user/user-model');
+
+// middleware imports
 const { authentication } = require('../auth/authentication');
 
+// User Routes
 // incoming /api
-
 router.post('/register', (req, res) => {
   const newUser = req.body;
   let { username, password } = req.body;
@@ -37,7 +43,11 @@ router.post('/login', (req, res) => {
     .getBy(username)
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
-        res.status(200).json({ message: `Welcome ${user.username}!` });
+        // add session
+        req.session.user = user;
+        res
+          .status(200)
+          .json({ message: `Welcome ${user.username}!, you have a cookie.` });
       } else {
         res.status(401).json({ message: 'Invalid Credentials' });
       }

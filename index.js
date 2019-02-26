@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const server = express();
+const session = require('express-session');
 
 // data imports
 const user = require('./user/user-model');
@@ -10,7 +11,24 @@ const user = require('./user/user-model');
 const userRouter = require('./user/user-route');
 
 // middleware imports
-const { authentication } = require('./auth/authentication');
+
+// Session Configuration
+const sessionConfig = {
+  name: 'sessioncookie',
+  secret: 'this is a secret, sort of', // place this in .env
+  cookie: {
+    maxAge: 1000 * 60 * 60, // 1 hour
+    secure: false
+  },
+  httpOnly: true,
+  resave: false,
+  saveUninitialized: false
+
+  // store: {}
+};
+
+// Invoke Session
+server.use(session(sessionConfig));
 
 // server extensions
 server.use(express.json());
@@ -19,14 +37,6 @@ server.use(morgan('dev'));
 
 // apply server routes
 server.use('/api', userRouter);
-
-// get users if authorized
-server.get('/api/users', authentication, (req, res) => {
-  user
-    .get()
-    .then(users => res.status(200).json({ users }))
-    .catch(err => console.log(err));
-});
 
 const port = 4000;
 
