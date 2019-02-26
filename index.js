@@ -3,9 +3,11 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const server = express();
 const session = require('express-session');
+const KnexSessionsStore = require('connect-session-knex')(session);
 
 // data imports
 const user = require('./user/user-model');
+const database = require('./data/dbConfig');
 
 // router imports
 const userRouter = require('./user/user-route');
@@ -17,14 +19,17 @@ const sessionConfig = {
   name: 'sessioncookie',
   secret: 'this is a secret, sort of', // place this in .env
   cookie: {
-    maxAge: 1000 * 60 * 60, // 1 hour
+    maxAge: 1000 * 60 * 60, // session valid for 1 hour
     secure: false
   },
   httpOnly: true,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
 
-  // store: {}
+  store: new KnexSessionsStore({
+    knex: database,
+    createTable: true
+  })
 };
 
 // Invoke Session
