@@ -8,9 +8,6 @@ const router = express.Router();
 // data imports
 const users = require('../user/user-model');
 
-// middleware imports
-const { authentication } = require('../auth/authentication');
-
 // User Routes
 // incoming /api
 router.post('/register', (req, res) => {
@@ -45,14 +42,29 @@ router.post('/login', (req, res) => {
       if (user && bcrypt.compareSync(password, user.password)) {
         // add session
         req.session.user = user;
-        res
-          .status(200)
-          .json({ message: `Welcome ${user.username}!, you have a cookie.` });
+        res.status(200).json({
+          message: `Welcome ${user.username}!, you have a cookie.`
+        });
       } else {
         res.status(401).json({ message: 'Invalid Credentials' });
       }
     })
     .catch(err => console.log(err));
+});
+
+router.get('/logout', (req, res) => {
+  console.log(req);
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        res.res(500).json({ message: 'Logout error occurred' });
+      } else {
+        res.json({ message: 'Logout successful' });
+      }
+    });
+  } else {
+    res.end();
+  }
 });
 
 module.exports = router;

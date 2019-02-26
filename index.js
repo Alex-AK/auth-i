@@ -6,7 +6,6 @@ const session = require('express-session');
 const KnexSessionsStore = require('connect-session-knex')(session);
 
 // data imports
-const user = require('./user/user-model');
 const database = require('./data/dbConfig');
 
 // router imports
