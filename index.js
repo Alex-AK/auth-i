@@ -11,8 +11,10 @@ const database = require('./data/dbConfig');
 
 // router imports
 const userRouter = require('./user/user-route');
+const restrictedRouter = require('./user/restricted-route');
 
 // middleware imports
+const { authentication } = require('./auth/authentication');
 
 // Session Configuration
 const sessionConfig = {
@@ -42,6 +44,7 @@ server.use(morgan('dev'));
 
 // apply server routes
 server.use('/api', userRouter);
+server.use('/api', authentication, restrictedRouter);
 
 const port = 4000;
 

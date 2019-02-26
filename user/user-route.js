@@ -27,7 +27,7 @@ router.post('/register', (req, res) => {
   users
     .add(newUser)
     .then(user => {
-      res.status(201).json(user);
+      res.status(201).json({ message: 'Registration complete' });
     })
     .catch(err => console.log(err));
 });
@@ -52,14 +52,6 @@ router.post('/login', (req, res) => {
         res.status(401).json({ message: 'Invalid Credentials' });
       }
     })
-    .catch(err => console.log(err));
-});
-
-// get users if authorized
-router.get('/users', authentication, (req, res) => {
-  users
-    .get()
-    .then(users => res.status(200).json({ users }))
     .catch(err => console.log(err));
 });
 
