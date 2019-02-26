@@ -56,7 +56,7 @@ router.post('/login', (req, res) => {
 });
 
 // get users if authorized
-router.get('/api/users', authentication, (req, res) => {
+router.get('/users', authentication, (req, res) => {
   users
     .get()
     .then(users => res.status(200).json({ users }))
